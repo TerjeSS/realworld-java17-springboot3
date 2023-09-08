@@ -41,6 +41,8 @@ public class OrdersServiceTest {
     OrderArticleRepository orderArticleRepository;
 @Autowired
     OrderService orderService;
+@Autowired
+ProcessingOrderService processingOrderService;
 
     private Article effectiveJava;
     private Article unEffectiveJava;
@@ -99,6 +101,27 @@ public class OrdersServiceTest {
 
     }
 
+
+    @Test
+    @DisplayName("should set processed to true on processed orders ")
+    public void setProcessedOnOrder() throws InterruptedException {
+
+        CreateOrderRequest createOrderRequest = new CreateOrderRequest(james, "ABC Veien 199", james.getEmail());
+        Orders orders = orderService.createOrder(createOrderRequest);
+        orders.setUser_id(UUID.fromString("bf46c3cb-6215-4748-a09f-136da25bd183"));
+        orderRepository.save(orders);
+
+        orderService.addArticleToOrder(effectiveJava, orders);
+        orderService.addArticleToOrder(unEffectiveJava, orders);
+        orderService.addArticleToOrder(tdd, orders);
+
+        orderService.updateOrder(orders);
+
+        processingOrderService.processOrder(orders);
+
+        assertTrue(orders.isProcessed());
+
+    }
     @Test
     @DisplayName("Should calculate price of order")
     public void calculateOrderPrice(){
@@ -113,7 +136,7 @@ public class OrdersServiceTest {
         orderService.addArticleToOrder(tdd, orders);
 
         orderService.updateOrder(orders);
-        assertTrue(orders.getPrice() > 0);
+        assertEquals(250, (int) orders.getPrice());
     }
 
     @Test

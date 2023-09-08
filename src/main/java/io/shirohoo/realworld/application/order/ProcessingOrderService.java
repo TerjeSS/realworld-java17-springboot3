@@ -6,13 +6,13 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 
 @Component
-public class ProcessingOrders {      ´
+public class ProcessingOrderService {
     OrderRepository orderRepository;
-    public ProcessingOrders(OrderRepository orderRepository){
+    public ProcessingOrderService(OrderRepository orderRepository){
         this.orderRepository = orderRepository;
     }
 
-    private void processOrder(Orders order) throws InterruptedException{
+    void processOrder(Orders order) throws InterruptedException{
         System.out.println("Sent email with orderId: " + order.getId());
 
         order.setProcessed(true);
