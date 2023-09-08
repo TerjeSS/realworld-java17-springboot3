@@ -66,7 +66,7 @@ public class Orders {
         this.snailMailAddress = snailMailAddress;
     }
 
-        public void addOrderArticle(OrderArticle orderArticle) {
+    public void addOrderArticle(OrderArticle orderArticle) {
         this.orderArticles.add(orderArticle);
 
     }
@@ -77,7 +77,6 @@ public class Orders {
     public void setProcessed(boolean processed) {
         this.processed = processed;
     }
-
 
     public void setErrorType(String errorType) {
         this.errorType = errorType;
