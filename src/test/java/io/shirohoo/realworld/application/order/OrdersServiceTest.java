@@ -1,6 +1,8 @@
 package io.shirohoo.realworld.application.order;
 
 import io.shirohoo.realworld.IntegrationTest;
+import io.shirohoo.realworld.application.order.controller.CreateOrderRequest;
+import io.shirohoo.realworld.application.order.service.OrderService;
 import io.shirohoo.realworld.domain.article.Article;
 import io.shirohoo.realworld.domain.article.ArticleRepository;
 import io.shirohoo.realworld.domain.article.Tag;
@@ -18,8 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 @IntegrationTest
@@ -36,6 +39,8 @@ public class OrdersServiceTest {
     TagRepository tagRepository;
 @Autowired
     OrderArticleRepository orderArticleRepository;
+@Autowired
+    OrderService orderService;
 
     private Article effectiveJava;
     private Article unEffectiveJava;
@@ -94,6 +99,56 @@ public class OrdersServiceTest {
 
     }
 
+    @Test
+    @DisplayName("Should calculate price of order")
+    public void calculateOrderPrice(){
+
+        CreateOrderRequest createOrderRequest = new CreateOrderRequest(james, "Some address", james.getEmail());
+        Orders orders = orderService.createOrder(createOrderRequest);
+        orders.setUser_id(UUID.fromString("bf46c3cb-6215-4748-a09f-136da25bd183"));
+        orderRepository.save(orders);
+
+        orderService.addArticleToOrder(effectiveJava, orders);
+        orderService.addArticleToOrder(unEffectiveJava, orders);
+        orderService.addArticleToOrder(tdd, orders);
+
+        orderService.updateOrder(orders);
+        assertTrue(orders.getPrice() > 0);
+    }
+
+    @Test
+    @DisplayName("Should add article to existing order")
+    public void addArticleToOrder(){
+
+        CreateOrderRequest createOrderRequest = new CreateOrderRequest(james, "Some address", james.getEmail());
+        Orders orders = orderService.createOrder(createOrderRequest);
+        OrderArticle orderArticle1 = new OrderArticle(orders, effectiveJava);
+        orders.addOrderArticle(orderArticle1);
+        orderArticleRepository.save(orderArticle1);
+
+        System.out.println(orders);
+        orderService.updateOrder(orders);
+        assertFalse(orders.getOrderArticles().isEmpty());
+
+
+
+    }
+
+    @Test
+    @DisplayName("Should transform CreateOrderRequest to Order")
+    public void saveCreateOrderRequestAsOrder(){
+
+
+        CreateOrderRequest createOrderRequest = new CreateOrderRequest(james, "Some address", james.getEmail());
+        Orders orders = orderService.createOrder(createOrderRequest);
+        System.out.println(orders);
+
+        assertThat(orders.getId(), greaterThan(0));
+
+
+
+
+    }
 
      @Test
      @DisplayName("Should create an order with multiple articles")
