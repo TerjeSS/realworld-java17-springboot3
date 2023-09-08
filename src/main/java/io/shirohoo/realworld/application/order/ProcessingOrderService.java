@@ -15,7 +15,6 @@ public class ProcessingOrderService {
     void processOrder(Order order) throws InterruptedException{
         System.out.println("Sent email with orderId: " + order.getId());
 
-        order.setProcessed(true);
         orderRepository.save(order);
 
         if (order.getSnailMailAddress().length() > 1){
@@ -23,10 +22,11 @@ public class ProcessingOrderService {
         } else if (order.getSnailMailAddress() == null) {
             System.out.println("Sending order " + order.getId() + " to " + order.getSnailMailAddress());
         }
+        order.setProcessed(true);
     }
 
-    @Scheduled (cron = " */3 * * * * *")
-    public void processOrders() throws InterruptedException {
+//    @Scheduled (cron = " */3 * * * * *")
+    /*public void processOrders() throws InterruptedException {
         System.out.println("Processing all unprocessed orders");
 
 
@@ -36,7 +36,7 @@ public class ProcessingOrderService {
             processOrder(order);
             sendArticleBySnailMail(order);
         }
-    }
+    }*/
 
     private void sendArticleBySnailMail(Order order) {
         System.out.println("Sending article " + order.getId() + " to " + order.getSnailMailAddress());

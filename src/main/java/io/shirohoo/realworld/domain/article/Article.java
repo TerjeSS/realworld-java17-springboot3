@@ -160,5 +160,16 @@ public class Article {
     @Override
     public int hashCode() {
         return Objects.hash(this.id);
+
+    }
+
+    @Override
+    public String toString() {
+        return "Article{" +
+            "id=" + id +
+            ", author=" + author +
+            ", title='" + title + '\'' +
+            ", updatedAt=" + updatedAt +
+            '}';
     }
 }

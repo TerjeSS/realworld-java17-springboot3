@@ -58,4 +58,11 @@ public class OrderArticle {
     public void setId(OrderArticleId id) {
         this.id = id;
     }
+
+    @Override
+    public String toString() {
+        return "OrderArticle{" +
+            "article=" + article +
+            '}';
+    }
 }
