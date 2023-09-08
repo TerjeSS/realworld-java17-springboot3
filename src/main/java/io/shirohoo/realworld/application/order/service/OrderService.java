@@ -6,7 +6,7 @@ import io.shirohoo.realworld.domain.article.Article;
 import io.shirohoo.realworld.domain.order.OrderArticle;
 import io.shirohoo.realworld.domain.order.OrderArticleRepository;
 import io.shirohoo.realworld.domain.order.OrderRepository;
-import io.shirohoo.realworld.domain.order.Orders;
+import io.shirohoo.realworld.domain.order.Order;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,22 +22,23 @@ public class OrderService {
         this.orderArticleRepository = orderArticleRepository;
     }
 
-    public Orders addArticleToOrder(Article article, Orders order){
+    public Order addArticleToOrder(Article article, Order order){
         OrderArticle orderArticle = new OrderArticle(order, article);
         orderArticleRepository.save(orderArticle);
         order.addOrderArticle(orderArticle);
         calculatePrice(order);
+        updateOrder(order);
         return order;
 
 
     }
 
 
-    public void updateOrder(Orders order){
+    public void updateOrder(Order order){
         orderRepository.save(order);
     }
 
-    private void calculatePrice(Orders order) {
+    private void calculatePrice(Order order) {
         int pricePerArticle = 50;
         int physicalShippingPrice = 100;
         int totalPrice = 0;
@@ -53,25 +54,19 @@ public class OrderService {
     }
 
 
-    public Orders createOrder(CreateOrderRequest createOrderRequest){
+    public Order createOrder(CreateOrderRequest createOrderRequest){
 
-        Orders orders = new Orders();
+        Order order = new Order();
 
-        orders.setUser_id(createOrderRequest.getUser().getId());
-        orders.setEmail(createOrderRequest.getEmailAddress());
-        orders.setProcessed(false);
-        orders.setSnailMailAddress(createOrderRequest.getSnailMailAddress());
-
-        if(orders.getSnailMailAddress() == null) {
-            orders.setPrice(500);
-        }else {
-            orders.setPrice(1000);
-        }
-
-        orderRepository.save(orders);
+        order.setUser_id(createOrderRequest.getUser().getId());
+        order.setEmail(createOrderRequest.getEmailAddress());
+        order.setSnailMailAddress(createOrderRequest.getSnailMailAddress());
 
 
-        return orders;
+        orderRepository.save(order);
+
+
+        return order;
 
     }
 

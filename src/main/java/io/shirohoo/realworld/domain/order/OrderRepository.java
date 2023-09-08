@@ -5,12 +5,12 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface OrderRepository extends JpaRepository<Orders, Integer> {
+public interface OrderRepository extends JpaRepository<Order, Integer> {
 
     @Query("""
-FROM Orders WHERE processed = false 
+FROM Order WHERE processed = false 
 """)
 
-    public List <Orders> getUnprocessedOrders();
+    public List <Order> getUnprocessedOrders();
 
 }
