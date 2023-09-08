@@ -5,7 +5,7 @@ import io.shirohoo.realworld.domain.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class OrdersTest {
+public class OrderTest {
 
 
     private Article effectiveJava;

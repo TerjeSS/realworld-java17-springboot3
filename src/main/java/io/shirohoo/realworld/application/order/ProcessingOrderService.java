@@ -1,6 +1,6 @@
 package io.shirohoo.realworld.application.order;
 import io.shirohoo.realworld.domain.order.OrderRepository;
-import io.shirohoo.realworld.domain.order.Orders;
+import io.shirohoo.realworld.domain.order.Order;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ public class ProcessingOrderService {
         this.orderRepository = orderRepository;
     }
 
-    void processOrder(Orders order) throws InterruptedException{
+    void processOrder(Order order) throws InterruptedException{
         System.out.println("Sent email with orderId: " + order.getId());
 
         order.setProcessed(true);
@@ -25,18 +25,20 @@ public class ProcessingOrderService {
         }
     }
 
-    @Scheduled (cron = " * * /10 * * * *")
+    @Scheduled (cron = " */3 * * * * *")
     public void processOrders() throws InterruptedException {
+        System.out.println("Processing all unprocessed orders");
 
-        ArrayList<Orders> orders = (ArrayList<Orders>) orderRepository.getUnprocessedOrders();
 
-        for (Orders order : orders) {
+        ArrayList<Order> orders = (ArrayList<Order>) orderRepository.getUnprocessedOrders();
+
+        for (Order order : orders) {
             processOrder(order);
             sendArticleBySnailMail(order);
         }
     }
 
-    private void sendArticleBySnailMail(Orders order) {
+    private void sendArticleBySnailMail(Order order) {
         System.out.println("Sending article " + order.getId() + " to " + order.getSnailMailAddress());
     }
 }

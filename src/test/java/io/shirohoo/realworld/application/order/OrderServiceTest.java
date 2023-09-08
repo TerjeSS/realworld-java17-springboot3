@@ -7,7 +7,7 @@ import io.shirohoo.realworld.domain.article.Article;
 import io.shirohoo.realworld.domain.article.ArticleRepository;
 import io.shirohoo.realworld.domain.article.Tag;
 import io.shirohoo.realworld.domain.article.TagRepository;
-import io.shirohoo.realworld.domain.order.Orders;
+import io.shirohoo.realworld.domain.order.Order;
 import io.shirohoo.realworld.domain.order.OrderArticle;
 import io.shirohoo.realworld.domain.order.OrderArticleRepository;
 import io.shirohoo.realworld.domain.order.OrderRepository;
@@ -27,7 +27,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @IntegrationTest
 @DisplayName("The order service")
-public class OrdersServiceTest {
+public class OrderServiceTest {
 
 @Autowired
     ArticleRepository articleRepository;
@@ -107,19 +107,19 @@ ProcessingOrderService processingOrderService;
     public void setProcessedOnOrder() throws InterruptedException {
 
         CreateOrderRequest createOrderRequest = new CreateOrderRequest(james, "ABC Veien 199", james.getEmail());
-        Orders orders = orderService.createOrder(createOrderRequest);
-        orders.setUser_id(UUID.fromString("bf46c3cb-6215-4748-a09f-136da25bd183"));
-        orderRepository.save(orders);
+        Order order = orderService.createOrder(createOrderRequest);
+        order.setUser_id(createOrderRequest.getUser().getId());
+        orderRepository.save(order);
 
-        orderService.addArticleToOrder(effectiveJava, orders);
-        orderService.addArticleToOrder(unEffectiveJava, orders);
-        orderService.addArticleToOrder(tdd, orders);
+        orderService.addArticleToOrder(effectiveJava, order);
+        orderService.addArticleToOrder(unEffectiveJava, order);
+        orderService.addArticleToOrder(tdd, order);
 
-        orderService.updateOrder(orders);
+        orderService.updateOrder(order);
 
-        processingOrderService.processOrder(orders);
-
-        assertTrue(orders.isProcessed());
+        processingOrderService.processOrder(order);
+        System.out.println(order);
+        assertTrue(order.isProcessed());
 
     }
     @Test
@@ -127,16 +127,18 @@ ProcessingOrderService processingOrderService;
     public void calculateOrderPrice(){
 
         CreateOrderRequest createOrderRequest = new CreateOrderRequest(james, "Some address", james.getEmail());
-        Orders orders = orderService.createOrder(createOrderRequest);
-        orders.setUser_id(UUID.fromString("bf46c3cb-6215-4748-a09f-136da25bd183"));
-        orderRepository.save(orders);
+        Order order = orderService.createOrder(createOrderRequest);
+        order.setUser_id(UUID.fromString("bf46c3cb-6215-4748-a09f-136da25bd183"));
+        orderRepository.save(order);
 
-        orderService.addArticleToOrder(effectiveJava, orders);
-        orderService.addArticleToOrder(unEffectiveJava, orders);
-        orderService.addArticleToOrder(tdd, orders);
+        orderService.addArticleToOrder(effectiveJava, order);
+        orderService.addArticleToOrder(unEffectiveJava, order);
+        orderService.addArticleToOrder(tdd, order);
 
-        orderService.updateOrder(orders);
-        assertEquals(250, (int) orders.getPrice());
+        orderService.updateOrder(order);
+
+        System.out.println(order);
+        assertEquals(250, (int) order.getPrice());
     }
 
     @Test
@@ -144,14 +146,14 @@ ProcessingOrderService processingOrderService;
     public void addArticleToOrder(){
 
         CreateOrderRequest createOrderRequest = new CreateOrderRequest(james, "Some address", james.getEmail());
-        Orders orders = orderService.createOrder(createOrderRequest);
-        OrderArticle orderArticle1 = new OrderArticle(orders, effectiveJava);
-        orders.addOrderArticle(orderArticle1);
+        Order order = orderService.createOrder(createOrderRequest);
+        OrderArticle orderArticle1 = new OrderArticle(order, effectiveJava);
+        order.addOrderArticle(orderArticle1);
         orderArticleRepository.save(orderArticle1);
 
-        System.out.println(orders);
-        orderService.updateOrder(orders);
-        assertFalse(orders.getOrderArticles().isEmpty());
+        System.out.println(order);
+        orderService.updateOrder(order);
+        assertFalse(order.getOrderArticles().isEmpty());
 
 
 
@@ -163,10 +165,10 @@ ProcessingOrderService processingOrderService;
 
 
         CreateOrderRequest createOrderRequest = new CreateOrderRequest(james, "Some address", james.getEmail());
-        Orders orders = orderService.createOrder(createOrderRequest);
-        System.out.println(orders);
+        Order order = orderService.createOrder(createOrderRequest);
+        System.out.println(order);
 
-        assertThat(orders.getId(), greaterThan(0));
+        assertThat(order.getId(), greaterThan(0));
 
 
 
@@ -177,26 +179,26 @@ ProcessingOrderService processingOrderService;
      @DisplayName("Should create an order with multiple articles")
      public void createOrderWithMultipleArticles(){
 
-        Orders orders = new Orders();
-        orders.setEmail(simpson.getEmail());
-        orders.setUser_id(UUID.fromString("bf46c3cb-6215-4748-a09f-136da25bd183"));
-        orderRepository.save(orders);
+        Order order = new Order();
+        order.setEmail(simpson.getEmail());
+        order.setUser_id(UUID.fromString("bf46c3cb-6215-4748-a09f-136da25bd183"));
+        orderRepository.save(order);
 
-         OrderArticle orderArticle = new OrderArticle(orders, effectiveJava);
+         OrderArticle orderArticle = new OrderArticle(order, effectiveJava);
          orderArticleRepository.save(orderArticle);
-         OrderArticle anotherOrderArticle = new OrderArticle(orders, unEffectiveJava);
+         OrderArticle anotherOrderArticle = new OrderArticle(order, unEffectiveJava);
          orderArticleRepository.save(anotherOrderArticle);
-         OrderArticle thirdOrderArticle = new OrderArticle(orders, tdd);
+         OrderArticle thirdOrderArticle = new OrderArticle(order, tdd);
          orderArticleRepository.save(thirdOrderArticle);
 
-         orders.addOrderArticle(orderArticle);
-         orders.addOrderArticle(anotherOrderArticle);
-         orders.addOrderArticle(thirdOrderArticle);
+         order.addOrderArticle(orderArticle);
+         order.addOrderArticle(anotherOrderArticle);
+         order.addOrderArticle(thirdOrderArticle);
 
-         orderRepository.save(orders);
+         orderRepository.save(order);
 
-         Orders fetchedOrders = orderRepository.findById(orders.getId()).get();
-         assertTrue(fetchedOrders.getOrderArticles().size() > 2);
+         Order fetchedOrder = orderRepository.findById(order.getId()).get();
+         assertTrue(fetchedOrder.getOrderArticles().size() > 2);
 
 
      }
@@ -205,22 +207,22 @@ ProcessingOrderService processingOrderService;
     @DisplayName("Should create an order with one article")
     public void createOrderWithOneArticle(){
 
-        Orders orders = new Orders();
-        orders.setEmail("email@email.com");
-        orders.setProcessed(false);
-        orders.setUser_id(UUID.fromString("bf46c3cb-6215-4748-a09f-136da25bd183"));
-        orderRepository.save(orders);
+        Order order = new Order();
+        order.setEmail("email@email.com");
+        order.setProcessed(false);
+        order.setUser_id(UUID.fromString("bf46c3cb-6215-4748-a09f-136da25bd183"));
+        orderRepository.save(order);
 
-        OrderArticle orderArticle = new OrderArticle(orders, effectiveJava);
+        OrderArticle orderArticle = new OrderArticle(order, effectiveJava);
         orderArticleRepository.save(orderArticle);
 
 
-        orders.addOrderArticle(orderArticle);
-        orderRepository.save(orders);
+        order.addOrderArticle(orderArticle);
+        orderRepository.save(order);
 
-        Orders savedOrder = orderRepository.findById(orders.getId()).get();
+        Order savedOrder = orderRepository.findById(order.getId()).get();
 
-        assertEquals(savedOrder, orders);
+        assertEquals(savedOrder, order);
 
 
     }

@@ -3,14 +3,14 @@ package io.shirohoo.realworld.domain.order;
 
 import jakarta.persistence.*;
 
-import javax.lang.model.type.ErrorType;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
 
 @Entity
-public class Orders {
+@Table(name = "orders")
+public class Order {
 
     @Id
     @Column(name = "order_id")
@@ -19,13 +19,13 @@ public class Orders {
     private UUID user_id;
     private String email;
     private String snailMailAddress;
-    private boolean processed;
+    private boolean processed = false;
     private ErrorType errorType;
     private Integer price;
     @OneToMany(mappedBy = "article" )
     private Set<OrderArticle> orderArticles = new HashSet<>();
 
-    public Orders() {
+    public Order() {
     }
 
     public Integer getId() {
