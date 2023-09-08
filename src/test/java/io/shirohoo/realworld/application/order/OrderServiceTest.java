@@ -108,7 +108,7 @@ ProcessingOrderService processingOrderService;
 
         CreateOrderRequest createOrderRequest = new CreateOrderRequest(james, "ABC Veien 199", james.getEmail());
         Order order = orderService.createOrder(createOrderRequest);
-        order.setUser_id(createOrderRequest.getUser().getId());
+        order.setUser(createOrderRequest.getUser());
         orderRepository.save(order);
 
         orderService.addArticleToOrder(effectiveJava, order);
@@ -128,7 +128,7 @@ ProcessingOrderService processingOrderService;
 
         CreateOrderRequest createOrderRequest = new CreateOrderRequest(james, "Some address", james.getEmail());
         Order order = orderService.createOrder(createOrderRequest);
-        order.setUser_id(UUID.fromString("bf46c3cb-6215-4748-a09f-136da25bd183"));
+        order.setUser(james);
         orderRepository.save(order);
 
         orderService.addArticleToOrder(effectiveJava, order);
@@ -181,7 +181,7 @@ ProcessingOrderService processingOrderService;
 
         Order order = new Order();
         order.setEmail(simpson.getEmail());
-        order.setUser_id(UUID.fromString("bf46c3cb-6215-4748-a09f-136da25bd183"));
+        order.setUser(james);
         orderRepository.save(order);
 
          OrderArticle orderArticle = new OrderArticle(order, effectiveJava);
@@ -210,7 +210,7 @@ ProcessingOrderService processingOrderService;
         Order order = new Order();
         order.setEmail("email@email.com");
         order.setProcessed(false);
-        order.setUser_id(UUID.fromString("bf46c3cb-6215-4748-a09f-136da25bd183"));
+        order.setUser(james);
         orderRepository.save(order);
 
         OrderArticle orderArticle = new OrderArticle(order, effectiveJava);

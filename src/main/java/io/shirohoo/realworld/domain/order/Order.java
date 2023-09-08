@@ -1,6 +1,7 @@
 package io.shirohoo.realworld.domain.order;
 
 
+import io.shirohoo.realworld.domain.user.User;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
@@ -16,7 +17,9 @@ public class Order {
     @Column(name = "order_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private UUID user_id;
+    @JoinColumn(name = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User user;
     private String email;
     private String snailMailAddress;
     private boolean processed = false;
@@ -32,8 +35,8 @@ public class Order {
         return id;
     }
 
-    public UUID getUser_id() {
-        return user_id;
+    public User getUser() {
+        return user;
     }
 
     public String getEmail() {
@@ -56,8 +59,8 @@ public class Order {
         this.id = id;
     }
 
-    public void setUser_id(UUID user_id) {
-        this.user_id = user_id;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public void setEmail(String email) {
@@ -101,7 +104,7 @@ public class Order {
     public String toString() {
         return "Orders{" +
             "id=" + id +
-            ", user_id=" + user_id +
+            ", user_id=" + user +
             ", email='" + email + '\'' +
             ", snailMailAddress='" + snailMailAddress + '\'' +
             ", processed=" + processed +

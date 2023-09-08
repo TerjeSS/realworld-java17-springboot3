@@ -58,7 +58,7 @@ public class OrderService {
 
         Order order = new Order();
 
-        order.setUser_id(createOrderRequest.getUser().getId());
+        order.setUser(createOrderRequest.getUser());
         order.setEmail(createOrderRequest.getEmailAddress());
         order.setSnailMailAddress(createOrderRequest.getSnailMailAddress());
 
