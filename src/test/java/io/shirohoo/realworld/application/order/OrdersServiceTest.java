@@ -1,6 +1,8 @@
 package io.shirohoo.realworld.application.order;
 
 import io.shirohoo.realworld.IntegrationTest;
+import io.shirohoo.realworld.application.order.controller.CreateOrderRequest;
+import io.shirohoo.realworld.application.order.service.OrderService;
 import io.shirohoo.realworld.domain.article.Article;
 import io.shirohoo.realworld.domain.article.ArticleRepository;
 import io.shirohoo.realworld.domain.article.Tag;
@@ -18,8 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 @IntegrationTest
@@ -36,6 +39,8 @@ public class OrdersServiceTest {
     TagRepository tagRepository;
 @Autowired
     OrderArticleRepository orderArticleRepository;
+@Autowired
+    OrderService orderService;
 
     private Article effectiveJava;
     private Article unEffectiveJava;
@@ -94,6 +99,21 @@ public class OrdersServiceTest {
 
     }
 
+    @Test
+    @DisplayName("Should transform CreateOrderRequest to Order")
+    public void saveCreateOrderRequestAsOrder(){
+
+
+        CreateOrderRequest createOrderRequest = new CreateOrderRequest(james, "Some address", james.getEmail());
+        Orders orders = orderService.createOrder(createOrderRequest);
+        System.out.println(orders.getId() + " : " + orders.getEmail());
+
+        assertThat(orders.getId(), greaterThan(0));
+
+
+
+
+    }
 
      @Test
      @DisplayName("Should create an order with multiple articles")
