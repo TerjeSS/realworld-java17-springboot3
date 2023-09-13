@@ -22,7 +22,6 @@ public class RatingService {
         if (rating.getRating() > 5 || rating.getRating() < 0) {
              throw new IllegalArgumentException("Rating out of bounds");
         }
-        ratingRepository.dele
         return ratingRepository.save(rating);
     }
 
