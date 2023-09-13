@@ -52,6 +52,7 @@ public class SecurityConfiguration {
                                 .requestMatchers(
                                         HttpMethod.GET,
                                         "/api/articles/{slug}/comments",
+                                        "/api/ratings/{slug}",
                                         "/api/articles/{slug}",
                                         "/api/articles",
                                         "/api/profiles/{username}",
