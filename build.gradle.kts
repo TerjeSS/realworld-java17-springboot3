@@ -23,6 +23,7 @@ dependencies {
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
 
+    implementation("com.microsoft.playwright:playwright:1.36.0")
     implementation("com.h2database:h2");
     implementation("org.postgresql:postgresql:42.5.4")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
