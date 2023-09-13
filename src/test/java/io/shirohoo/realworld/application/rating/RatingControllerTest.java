@@ -16,7 +16,7 @@ public class RatingControllerTest {
     @Test
     public void givenArticleIdShouldReturnListOfRatings() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/ratings/{slug}", "effective-java"))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string("[]"));
     }
 }
