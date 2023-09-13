@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import io.shirohoo.realworld.domain.rating.Rating;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -57,6 +58,9 @@ public class Article {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ArticleFavorite> favoriteUsers = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "id", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Rating> ratings = new HashSet<>();
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "article", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ArticleTag> includeTags = new HashSet<>();
