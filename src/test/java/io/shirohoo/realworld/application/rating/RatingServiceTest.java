@@ -64,7 +64,22 @@ public class RatingServiceTest {
         Article ratedArticle = articleRepository.findById(effectiveJava.getId()).get();
 
         assertThat(ratedArticle.getRatings().size() > 0);
+    }
 
+    @Test
+    @DisplayName("delete rating from article")
+    public void deleteRatingFromArticle(){
+        Rating rating = new Rating();
+        rating.setArticle(effectiveJava);
+        rating.setUser(james);
+        rating.setRating(4);
 
+        ratingRepository.save(rating);
+        effectiveJava.addRating(rating);
+        ratingRepository.delete(rating);
+        effectiveJava.deleteRating(rating);
+        Article ratedArticle = articleRepository.findById(effectiveJava.getId()).get();
+
+        assertThat(ratedArticle.getRatings().isEmpty());
     }
 }

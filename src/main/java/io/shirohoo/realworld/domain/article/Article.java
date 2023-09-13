@@ -89,6 +89,9 @@ public class Article {
     public void addRating(Rating rating){
         this.ratings.add(rating);
     }
+    public void deleteRating(Rating rating){
+        this.ratings.remove(rating);
+    }
     public void updateTitle(String title) {
         if (title == null || title.isBlank()) {
             return;
