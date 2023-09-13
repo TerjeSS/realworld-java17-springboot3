@@ -85,6 +85,10 @@ public class Article {
         this.createdAt = LocalDateTime.now();
     }
 
+
+    public void addRating(Rating rating){
+        this.ratings.add(rating);
+    }
     public void updateTitle(String title) {
         if (title == null || title.isBlank()) {
             return;
