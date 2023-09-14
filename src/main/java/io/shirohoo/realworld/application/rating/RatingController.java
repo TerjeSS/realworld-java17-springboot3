@@ -1,23 +1,23 @@
 package io.shirohoo.realworld.application.rating;
 
 
+import io.shirohoo.realworld.application.article.service.ArticleService;
 import io.shirohoo.realworld.domain.rating.Rating;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequiredArgsConstructor
 public class RatingController {
 
     private final RatingService ratingService;
+    private final ArticleService articleService;
 
-    public RatingController(RatingService ratingService){
+    public RatingController(RatingService ratingService, ArticleService articleService){
         this.ratingService = ratingService;
+        this.articleService = articleService;
     }
 
-    private final RatingService ratingService;
-    private final ArticleService articleService;
 
     @GetMapping("/api/ratings/{slug}")
     public List<Rating> getRatings(@PathVariable String slug) {

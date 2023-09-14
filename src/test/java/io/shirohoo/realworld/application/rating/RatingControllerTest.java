@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @IntegrationTest
@@ -55,16 +56,16 @@ public class RatingControllerTest {
 
     @Test
     public void givenNonExistingArticleIdShouldReturn404() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/ratings/{slug}", "effective-java"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/ratings/{slug}", "wrong-slug"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andExpect(MockMvcResultMatchers.content().string("[]"));
     }
 
     @Test
     public void givenExistingArticleShouldReturnListOfRating() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/ratings/{slug}", "existing-slug"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/ratings/{slug}", "effective-java"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(jsonPath("$.rating").value( 10));
+                .andExpect((ResultMatcher) jsonPath("$.rating").value( 10));
 
     }
 
