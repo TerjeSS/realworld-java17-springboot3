@@ -6,18 +6,24 @@ import io.shirohoo.realworld.IntegrationTest;
 import io.shirohoo.realworld.domain.article.Article;
 import io.shirohoo.realworld.domain.article.ArticleRepository;
 import io.shirohoo.realworld.domain.rating.Rating;
+import io.shirohoo.realworld.domain.rating.RatingRepository;
 import io.shirohoo.realworld.domain.user.User;
 import io.shirohoo.realworld.domain.user.UserRepository;
+import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.web.JsonPath;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultHandler;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.JsonPathResultMatchers;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @IntegrationTest
@@ -31,7 +37,8 @@ public class RatingControllerTest {
     ArticleRepository articleRepository;
     @Autowired
     ObjectMapper objectMapper;
-
+    @Autowired
+    RatingRepository ratingRepository;
 
     Article effectiveJava;
     User james;
@@ -54,6 +61,7 @@ public class RatingControllerTest {
         articleRepository.save(effectiveJava);
     }
 
+
     @Test
     public void givenNonExistingArticleIdShouldReturn404() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/ratings/{slug}", "wrong-slug"))
@@ -62,27 +70,32 @@ public class RatingControllerTest {
     }
 
     @Test
-    public void givenExistingArticleShouldReturnListOfRating() throws Exception {
+    public void givenExistingArticleShouldReturnListOfRatings() throws Exception {
+        Rating rating = new Rating();
+        rating.setArticle(effectiveJava);
+        rating.setUser(james);
+        rating.setRating(4);
+        ratingRepository.save(rating);
+        effectiveJava.addRating(rating);
+
         mockMvc.perform(MockMvcRequestBuilders.get("/api/ratings/{slug}", "effective-java"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect((ResultMatcher) jsonPath("$.rating").value( 10));
-
+                .andExpect(MockMvcResultMatchers.jsonPath("$.[0].rating").value(4))
+                .andDo(MockMvcResultHandlers.print())                                       ;
+       //         .andExpect(jsonPath("$.rating.rating").value(10));
     }
 
     @Test
     public void testCreateRating() throws Exception {
-
         Rating rating = new Rating();
         rating.setRating(4);
         rating.setArticle(effectiveJava);
         rating.setUser(james);
 
-
         mockMvc.perform(MockMvcRequestBuilders.post("/api/ratings")
             .content(objectMapper.writeValueAsString(rating))
             .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().is2xxSuccessful());
-
     }
 }
 
