@@ -6,7 +6,11 @@ import io.shirohoo.realworld.IntegrationTest;
 import io.shirohoo.realworld.domain.article.Article;
 import io.shirohoo.realworld.domain.article.ArticleRepository;
 import io.shirohoo.realworld.domain.rating.Rating;
+
+import io.shirohoo.realworld.domain.rating.RatingRequest;
+
 import io.shirohoo.realworld.domain.rating.RatingRepository;
+
 import io.shirohoo.realworld.domain.user.User;
 import io.shirohoo.realworld.domain.user.UserRepository;
 import org.aspectj.lang.annotation.Before;
@@ -23,7 +27,10 @@ import org.springframework.test.web.servlet.result.JsonPathResultMatchers;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+
+import java.util.Map;
+
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @IntegrationTest
@@ -87,13 +94,16 @@ public class RatingControllerTest {
 
     @Test
     public void testCreateRating() throws Exception {
-        Rating rating = new Rating();
-        rating.setRating(4);
-        rating.setArticle(effectiveJava);
-        rating.setUser(james);
+
+
+
+        RatingRequest request = new RatingRequest();
+        request.setArticleId(effectiveJava.getId());
+        request.setRating(4);
+
 
         mockMvc.perform(MockMvcRequestBuilders.post("/api/ratings")
-            .content(objectMapper.writeValueAsString(rating))
+            .content(objectMapper.writeValueAsString(Map.of("rating", request)))
             .contentType(MediaType.APPLICATION_JSON)
         ).andExpect(status().is2xxSuccessful());
     }

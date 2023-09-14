@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @IntegrationTest
 @DisplayName("RatingService should")
@@ -59,7 +60,7 @@ public class RatingServiceTest {
         effectiveJava.addRating(rating);
         Article ratedArticle = articleRepository.findById(effectiveJava.getId()).get();
 
-        assertThat(ratedArticle.getRatings().size() > 0);
+        assertTrue(ratedArticle.getRatings().size() > 0);
     }
 
     @Test
@@ -76,6 +77,6 @@ public class RatingServiceTest {
         effectiveJava.deleteRating(rating);
         Article ratedArticle = articleRepository.findById(effectiveJava.getId()).get();
 
-        assertThat(ratedArticle.getRatings().isEmpty());
+        assertTrue(ratedArticle.getRatings().isEmpty());
     }
 }

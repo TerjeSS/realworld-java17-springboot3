@@ -47,7 +47,8 @@ public class SecurityConfiguration {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .cors(SecurityConfigurerAdapter::and)
                 .authorizeHttpRequests(
-                        requests -> requests.requestMatchers(HttpMethod.POST, "/api/users", "/api/users/login")
+                        requests -> requests.requestMatchers(HttpMethod.POST, "/api/users", "/api/users/login", "/api" +
+                                "/ratings")
                                 .permitAll()
                                 .requestMatchers(
                                         HttpMethod.GET,
