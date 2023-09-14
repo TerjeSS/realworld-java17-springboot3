@@ -4,6 +4,17 @@ plugins {
     id("com.diffplug.spotless") version "6.18.0"
     id("org.springframework.boot") version "3.0.5"
     id("io.spring.dependency-management") version "1.1.0"
+    id ("com.microsoft.azure.azurewebapp") version "1.7.1"
+
+}
+azurewebapp {
+    subscription = "77bc7cf0-5135-49cb-9781-a5360eeff116"
+    resourceGroup = "rg-brights-realworld"
+    appName = "realworldTestTerje"
+    pricingTier = "B1"
+    region = "westeu"
+
+
 }
 
 group = "io.shirohoo"
