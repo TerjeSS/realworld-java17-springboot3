@@ -7,8 +7,6 @@ import java.util.List;
 
 @Service
 public class RatingService {
-
-
     RatingRepository ratingRepository;
 
     public RatingService(RatingRepository ratingRepository){
@@ -25,9 +23,8 @@ public class RatingService {
         return ratingRepository.save(rating);
     }
 
-
-    public List<Rating> getRatingsByArticle(Integer id){
-        return ratingRepository.findAllByArticleId(id);
+    public List<Rating> getRatingsByArticleId(Integer id){
+        return ratingRepository.findAllRatingsByArticleId(id);
     }
 
 }

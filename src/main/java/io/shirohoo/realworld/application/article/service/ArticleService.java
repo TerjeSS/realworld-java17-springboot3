@@ -5,6 +5,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
 
+import io.shirohoo.realworld.domain.rating.Rating;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -53,6 +54,12 @@ public class ArticleService {
         return byFacets.getContent().stream()
                 .map(article -> new ArticleVO(me, article))
                 .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public Integer getArticleId(String slug) {
+        Article article = findBySlug(slug);
+        return article.getId();
     }
 
     @Transactional(readOnly = true)

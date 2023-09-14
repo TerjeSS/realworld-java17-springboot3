@@ -82,6 +82,7 @@ public class Article {
         this.content = content;
         this.favoriteUsers = new HashSet<>();
         this.includeTags = new HashSet<>();
+        this.ratings = new HashSet<>();
         this.createdAt = LocalDateTime.now();
     }
 
@@ -141,6 +142,10 @@ public class Article {
 
     public List<Tag> getTags() {
         return this.includeTags.stream().map(ArticleTag::getTag).toList();
+    }
+
+    public List<Rating> getRatings() {
+        return this.ratings.stream().toList();
     }
 
     public String[] getTagNames() {

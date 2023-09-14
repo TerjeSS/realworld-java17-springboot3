@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface RatingRepository extends CrudRepository<Rating, Integer> {
 
-    List<Rating> findAllByArticleId(Integer id);
+    List<Rating> findAllRatingsByArticleId(Integer id);
+
 }

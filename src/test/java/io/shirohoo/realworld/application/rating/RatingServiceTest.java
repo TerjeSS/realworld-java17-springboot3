@@ -26,8 +26,6 @@ public class RatingServiceTest {
     @Autowired
     RatingRepository ratingRepository;
 
-
-
     Article effectiveJava;
     User james;
 
@@ -48,8 +46,6 @@ public class RatingServiceTest {
             .build();
         articleRepository.save(effectiveJava);
     }
-
-
 
     @Test
     @DisplayName("add rating to exisitng article to check relation")
