@@ -30,8 +30,6 @@ public class RatingControllerTest {
     ArticleRepository articleRepository;
     @Autowired
     ObjectMapper objectMapper;
-    @Autowired
-        RatingService ratingService;
 
 
     Article effectiveJava;
